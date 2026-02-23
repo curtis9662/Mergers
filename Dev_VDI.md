@@ -1,5 +1,7 @@
-# 🛠️ Platform Engineering Runbook: M&A Employee DevBox Integration
 
+# 🛠️ Platform Engineering Runbook: M&A Employee DevBox Integration
+>> Start Here for Technical Config: https://learn.microsoft.com/en-us/azure/dev-box/concept-dev-box-deployment-guide
+>> 
 > **Classification:** Enterprise Process | Procedural Planning 
 > **Objective:** Deployment of strictly segmented, structurally isolated DevBox compute environments for integrated personnel resulting from corporate mergers, ensuring zero circumvention of cryptographic and access-control security perimeters.
 > **Empirical Basis:** Methodologies are strictly derived from computationally validated Azure provisioning protocols. 
