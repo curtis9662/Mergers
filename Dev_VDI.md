@@ -116,6 +116,12 @@ Support Log Capabilities
 
 <img width="678" height="1079" alt="image" src="https://github.com/user-attachments/assets/ab87d185-b4f3-434b-82e6-d42d5c855bb9" />
 
+End User Experience:
+
+<img width="2583" height="1606" alt="image" src="https://github.com/user-attachments/assets/79f6e893-d70f-4e1a-b920-665ab239d933" />
+<img width="2583" height="1606" alt="image" src="https://github.com/user-attachments/assets/79f6e893-d70f-4e1a-b920-665ab239d933" />
+
+
 Tool Bar Expansion, and Collapse tab
 
 <img width="1327" height="1091" alt="image" src="https://github.com/user-attachments/assets/cfe393cd-c25b-4c64-993e-c133e3ee06d5" />
