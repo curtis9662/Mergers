@@ -89,3 +89,10 @@ graph LR
     D --> E["⚙️"]
     E --> F["💻"]
     F --> G["🔒"]
+
+
+
+```
+
+You will see the Following GUI after successful configuration:
+<img width="2559" height="1317" alt="image" src="https://github.com/user-attachments/assets/33410a29-e640-4b82-88eb-d63a295c4b9c" />
