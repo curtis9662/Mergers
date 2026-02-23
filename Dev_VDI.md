@@ -102,6 +102,7 @@ Users are required to Approve the Authentication via MFA
 After successful authN the VM will begin the Enterprise configured consistent setup for the specified user:
 <img width="1915" height="1077" alt="image" src="https://github.com/user-attachments/assets/43ccc7a5-6cca-4687-8b93-4166d0c366df" />
 <img width="491" height="896" alt="image" src="https://github.com/user-attachments/assets/b8cdf792-400d-4aa6-b0d7-f9160a59b56b" />
+
 Connection Diagnostics for Performance Eval
 <img width="1000" height="1067" alt="image" src="https://github.com/user-attachments/assets/43170c3d-d9d8-4a68-8e73-08a652aeee4f" />
 File Xfer control:
@@ -110,7 +111,9 @@ File Xfer control:
 <img width="655" height="1076" alt="image" src="https://github.com/user-attachments/assets/e64a5e66-f4bb-4735-9d83-c41842d4fcb6" />
 
 Support Log Capabilities
+
 <img width="678" height="1079" alt="image" src="https://github.com/user-attachments/assets/ab87d185-b4f3-434b-82e6-d42d5c855bb9" />
+
 Tool Bar Expansion, and Collapse tab
 
 <img width="1327" height="1091" alt="image" src="https://github.com/user-attachments/assets/cfe393cd-c25b-4c64-993e-c133e3ee06d5" />
