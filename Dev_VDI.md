@@ -26,6 +26,19 @@ Prior to instantiating compute resources, topological validation of user identit
 | **Compute Topology** | Azure Dev Center & Network Connection | Azure Resource Graph / CLI checks |
 
 ---
+# 🗓️ 10-Day M&A DevBox Deployment Timeline
+
+| **Timeline** | **Phase / Objective**                 | **Procedural Steps**                                                                                                                                                                  | **Required RBAC Role(s)**                                                                                  |
+|--------------|---------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
+| Days 1-2     | Phase I: Verification & Topology Prep | Validate Entra ID P1/P2, Intune, and Windows 11 Enterprise licenses. Verify VNet and network connectivity for strict isolation.                                                       | Global Reader OR Billing Administrator (Licenses)Intune Administrator (Endpoint)Network Contributor (VNet) |
+| Days 3-4     | Phase II: Base Computation Template   | Provision the Dev Center. Create the Dev Box Definition using the hardened corporate baseline (e.g., Win 11 + M365). Allocate compute (8 vCPU/32GB RAM/512GB SSD).                    | DevCenter Contributor Requires Reader access on the Compute Gallery if using custom images.                |
+| Days 5-6     | Phase III: Pool Instantiation         | Map the Project to the M&A unit. Create the Dev Box Pools. Bind the Dev Box definition and isolated Network Connection. Configure Auto-Stop schedules.                                | DevCenter Project Admin                                                                                    |
+| Days 7       | Phase III: Access Delegation (IAM)    | Map the newly integrated M&A personnel security groups to the specific Dev Box pool. Ensure Local Admin restrictions are set as required.                                             | User Access Administrator OR Owner (at the Project level)                                                  |
+| Days 8       | Phase IV: Protocol Communication      | Draft and distribute the structured onboarding communication to the M&A personnel, detailing portal access (devbox.microsoft.com) and MFA prerequisites.                              | N/A (Corporate Comms / IT Service Management)                                                              |
+| Days 9-10    | Phase V: Access Flow & UX Validation  | Pilot testing. Have a subset of M&A users execute the login flow, approve MFA, and initialize their DevBox. Monitor connection diagnostics, file transfer controls, and support logs. | Dev Box User (for the M&A testers)Desktop Virtualization Contributor (for IT monitoring performance)       |
+|              |                                       |                                                                               
+
+---
 
 ## 🏗️ Phase II: Base Computation Template (Image Definition)
 
@@ -110,17 +123,6 @@ graph LR
 
 
 ```
-# 🗓️ 10-Day M&A DevBox Deployment Timeline
-
-| **Timeline** | **Phase / Objective**                 | **Procedural Steps**                                                                                                                                                                  | **Required RBAC Role(s)**                                                                                  |
-|--------------|---------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
-| Days 1-2     | Phase I: Verification & Topology Prep | Validate Entra ID P1/P2, Intune, and Windows 11 Enterprise licenses. Verify VNet and network connectivity for strict isolation.                                                       | Global Reader OR Billing Administrator (Licenses)Intune Administrator (Endpoint)Network Contributor (VNet) |
-| Days 3-4     | Phase II: Base Computation Template   | Provision the Dev Center. Create the Dev Box Definition using the hardened corporate baseline (e.g., Win 11 + M365). Allocate compute (8 vCPU/32GB RAM/512GB SSD).                    | DevCenter Contributor Requires Reader access on the Compute Gallery if using custom images.                |
-| Days 5-6     | Phase III: Pool Instantiation         | Map the Project to the M&A unit. Create the Dev Box Pools. Bind the Dev Box definition and isolated Network Connection. Configure Auto-Stop schedules.                                | DevCenter Project Admin                                                                                    |
-| Days 7       | Phase III: Access Delegation (IAM)    | Map the newly integrated M&A personnel security groups to the specific Dev Box pool. Ensure Local Admin restrictions are set as required.                                             | User Access Administrator OR Owner (at the Project level)                                                  |
-| Days 8       | Phase IV: Protocol Communication      | Draft and distribute the structured onboarding communication to the M&A personnel, detailing portal access (devbox.microsoft.com) and MFA prerequisites.                              | N/A (Corporate Comms / IT Service Management)                                                              |
-| Days 9-10    | Phase V: Access Flow & UX Validation  | Pilot testing. Have a subset of M&A users execute the login flow, approve MFA, and initialize their DevBox. Monitor connection diagnostics, file transfer controls, and support logs. | Dev Box User (for the M&A testers)Desktop Virtualization Contributor (for IT monitoring performance)       |
-|              |                                       |                                                                               
 
 You will see the Following GUI after successful configuration:
 <img width="2559" height="1317" alt="image" src="https://github.com/user-attachments/assets/33410a29-e640-4b82-88eb-d63a295c4b9c" />
