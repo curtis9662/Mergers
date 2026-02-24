@@ -82,6 +82,16 @@ The following syntax is structurally optimized for unambiguous end-user executio
 > 
 > *Note: This environment operates under strict security segmentation policies. Do not attempt to bypass endpoint telemetry.*
 
+
+
+🔐 RBAC Scoping Notes & Best Practices
+To ensure zero circumvention of your cryptographic and access-control perimeters, keep the following in mind:
+
+Avoid Global Admin: None of the provisioning steps (Phases II through V) require Global Administrator privileges. Rely entirely on DevCenter-specific roles to limit blast radius.
+
+Separation of Duties: The engineer configuring the Network Connection (Network Contributor) should ideally be distinct from the engineer building the DevBox Pools (DevCenter Project Admin) to maintain topological integrity.
+
+End-User Scope: The incoming M&A personnel should only ever receive the Dev Box User role assigned at the Project level, never at the Dev Center or Subscription level.
 ---
 
 ## 🗺️ Phase V: Access Flow Topology 
