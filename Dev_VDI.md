@@ -1,4 +1,9 @@
-
+# Business Requirement: 
+> Org A hasH purchased) and began M&A with Org M. Org M needs to access Corporate Segmented applications to complete Merger & Acquisitions onboarding tasks via Enterprise applications that require conditional access.
+- Authorized IP
+- Managed Corp Device
+- Authorized Corp Identity
+  
 # 🛠️ Platform Engineering Runbook: M&A Employee DevBox Integration
 >> Start Here for Technical Config: https://learn.microsoft.com/en-us/azure/dev-box/concept-dev-box-deployment-guide
 >> 
