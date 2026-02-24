@@ -1,5 +1,5 @@
 # Business Requirement: 
-> Org A hasH purchased) and began M&A with Org M. Org M needs to access Corporate Segmented applications to complete Merger & Acquisitions onboarding tasks via Enterprise applications that require conditional access.
+> Org A has (purchased) and began M&A with Org M. Org M needs to access Corporate Segmented applications to complete Merger & Acquisitions onboarding tasks via Enterprise applications that require conditional access.
 - Authorized IP
 - Managed Corp Device
 - Authorized Corp Identity
