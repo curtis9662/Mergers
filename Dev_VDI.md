@@ -1,5 +1,5 @@
 # Business Requirement: 
-> Org A has acquired (purchased) and began M&A with Org M. Org M needs to accessOrg A Corporate logically Segmented applications to complete Merger & Acquisitions Business Req. onboarding tasks via Enterprise applications that require conditional access.
+> Org A has acquired (purchased) and began M&A with Org M. Org M needs to access Org A Corporate logically Segmented applications to complete Merger & Acquisitions Business Req. onboarding tasks via Enterprise applications that require conditional access.
 - Authorized IP / CIDR
 - Managed Corp Device
 - Authorized Corp Identity
