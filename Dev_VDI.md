@@ -151,10 +151,6 @@ Tool Bar Expansion, and Collapse tab
 
 <img width="1327" height="1091" alt="image" src="https://github.com/user-attachments/assets/cfe393cd-c25b-4c64-993e-c133e3ee06d5" />
 
-End UX / UI
-
-<img width="2583" height="1606" alt="image" src="https://github.com/user-attachments/assets/90e83aec-42dc-4efa-9a00-075df5bb3d18" />
-
 Access Validation
 
 <img width="1911" height="920" alt="image" src="https://github.com/user-attachments/assets/3a009d52-7b0d-40ea-a4e8-b3fb2c9f074e" />
