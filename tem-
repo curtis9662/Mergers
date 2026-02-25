@@ -1,0 +1,31 @@
+Implementing a split tunnel VPN architecture in a healthcare environment introduces severe security vulnerabilities by allowing remote endpoints simultaneous access to both the trusted corporate network and the untrusted public internet. From a security architecture perspective, this configuration inherently bypasses critical centralized perimeter defenses—such as Secure Web Gateways (SWG), Data Loss Prevention (DLP) systems, and network-based firewalls—for any traffic routed outside the encrypted tunnel. Consequently, the remote endpoint becomes a vulnerable bridging vector; an attacker who compromises the device via its unprotected internet connection can use it as a pivot point to move laterally into the secure healthcare network. This lack of centralized traffic inspection significantly elevates the risk of ransomware and malware infections, which are particularly devastating in healthcare due to the potential disruption of critical, life-saving patient care operations. Furthermore, split tunneling creates a massive blind spot for data exfiltration, making it incredibly difficult to detect or prevent a threat actor from siphoning Electronic Protected Health Information (ePHI) directly to an unauthorized external destination. This architectural visibility gap directly conflicts with HIPAA compliance mandates, which require continuous monitoring, strict access controls, and the safeguarding of sensitive patient data across all network boundaries. Ultimately, to maintain the integrity of the healthcare network and protect patient data, architectural best practices mandate a "full tunnel" approach or the adoption of Zero Trust Network Access (ZTNA) to ensure all endpoint traffic is continuously authenticated, inspected, and secured.
+
+compensating controls and mitigating architectural strategies to address the risks of a split tunnel VPN in a healthcare environment.
+
+These strategies are divided into tactical endpoint controls (if the split tunnel must remain temporarily) and strategic architectural shifts.
+
+Strategic Architectural Mitigations
+The most effective way to eliminate the risks associated with split tunneling is to modernize the remote access architecture, moving away from traditional perimeter-based VPNs.
+
+Zero Trust Network Access (ZTNA): Transition from a traditional VPN to ZTNA. ZTNA grants access on a per-application basis rather than granting broad network access. It authenticates and authorizes every request based on user identity, device posture, and context, effectively rendering the "split vs. full tunnel" debate obsolete while heavily restricting lateral movement.
+
+Secure Access Service Edge (SASE): Implement a SASE architecture to push security controls (like Secure Web Gateways, Cloud Access Security Brokers, and Zero Trust) to the cloud edge. This ensures that even when users are remote and off the corporate network, their internet-bound traffic is still inspected for malware and ePHI exfiltration.
+
+Virtual Desktop Infrastructure (VDI) / Desktop as a Service (DaaS): Require remote users to connect to a secure, centrally managed virtual desktop to access clinical systems and ePHI. This ensures that sensitive data never actually resides on or passes through the remote endpoint's local operating system, completely neutralizing the split tunnel exfiltration risk.
+
+Tactical Compensating Controls (Endpoint & Network)
+If business requirements temporarily dictate the continued use of a split tunnel VPN, the following compensating controls must be strictly enforced to protect the healthcare network.
+
+Endpoint Security Enhancements
+Advanced Endpoint Detection and Response (EDR / XDR): Deploy aggressive EDR solutions on all remote endpoints to continuously monitor for malicious behavior, memory injection, and lateral movement attempts that might originate from the unprotected internet connection.
+
+Always-On Cloud Web Filtering / DNS Security: Implement endpoint agents (e.g., Cisco Umbrella, Zscaler Client Connector) that enforce web filtering and malicious domain blocking directly on the device, regardless of whether traffic goes through the VPN tunnel.
+
+Host-Based Data Loss Prevention (DLP): Deploy local DLP agents configured with healthcare-specific policies (HIPAA identifiers, medical record formats) to prevent users from downloading ePHI from the corporate network and moving it to personal cloud storage via the split connection.
+
+Network & Access Controls
+Strict Micro-Segmentation: Isolate the VPN IP pools from critical internal networks. VPN users should only have access to a heavily restricted Demilitarized Zone (DMZ) or specific application jump servers, never directly to Electronic Health Record (EHR) databases or sensitive clinical VLANs.
+
+Continuous Device Posture Assessment (NAC): Configure the VPN gateway to continuously check the health of the connecting endpoint. If the endpoint disables its local firewall, turns off its antivirus, or exhibits indicators of compromise via the split connection, the VPN session must be automatically terminated.
+
+Phishing-Resistant MFA: Enforce strict, hardware-backed or biometric Multi-Factor Authentication (MFA) for any access to systems containing ePHI, reducing the likelihood that a compromised endpoint can be used to automatically inherit active sessions.
