@@ -13,9 +13,9 @@ If you don't configure them to coexist, one of two things usually happens:
 
 The standard architectural decision for co-management is **Split Tunneling**. 
 
-[Image of split tunneling vs full tunnel network diagram]
 
-* **OpenVPN** should be responsible *only* for traffic destined for your internal, private corporate network resources.
+
+* **OpenVPN** should be responsible *only* for traffic destined for your internal, private **corporate** network resources.
 * **Netskope** should be responsible for all internet-bound, SaaS, and public cloud traffic so it can apply security policies and content inspection.
 
 ---
