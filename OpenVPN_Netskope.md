@@ -42,3 +42,6 @@ Log into your Netskope tenant and add the following exceptions under `Settings >
 * **Destination Network / Location:** Create a Network Location object containing the **Public IP addresses** of your OpenVPN gateways. Add this as an exception and select the action to **Bypass**. Make sure to check the box that says *"Treat like local IP address"* to ensure the VPN traffic bypasses Netskope entirely.
 * **Domain Exception:** Add the Fully Qualified Domain Name (FQDN) of your OpenVPN server (e.g., `vpn.yourcompany.com`) to the Domain Exceptions list.
 * **Certificate Pinned Application (Process Bypass):** Add the OpenVPN executable processes (e.g., `openvpn.exe`, `openvpn-gui.exe`) as a Certificate Pinned App exception. This tells the Netskope client to completely ignore traffic generated directly by the OpenVPN client software.
+
+## The Following is the OKTA "Add Zone" GUi
+<img width="1881" height="957" alt="image" src="https://github.com/user-attachments/assets/1034036e-3fda-4802-b7c0-27b00a56cea5" />
