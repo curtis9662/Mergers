@@ -1,4 +1,4 @@
-## The Conflict: Why They Clash
+## The Conflict: Why They (OPENVPN ←→ NetSkope) Clash
 
 By default, OpenVPN often defaults to a "full tunnel," meaning it tries to capture all network traffic and send it to your private VPN gateway. At the same time, the Netskope Client establishes its own tunnel to steer web, cloud, or all traffic to the Netskope Security Cloud for security inspection (DLP, threat protection, etc.).
 
@@ -15,7 +15,7 @@ The standard architectural decision for co-management is **Split Tunneling**.
 
 
 
-* **OpenVPN** should be responsible *only* for traffic destined for your internal, private **corporate** network resources.
+* **OpenVPN** should be responsible *only* for traffic destined for your internal, private corporate network resources.
 * **Netskope** should be responsible for all internet-bound, SaaS, and public cloud traffic so it can apply security policies and content inspection.
 
 ---
@@ -39,4 +39,6 @@ You need to add "Exceptions" in Netskope’s Steering Configuration so Netskope 
 
 Log into your Netskope tenant and add the following exceptions under `Settings > Security Cloud Platform > Steering Configuration > Exceptions`:
 
-* **Destination Network / Location
+* **Destination Network / Location:** Create a Network Location object containing the **Public IP addresses** of your OpenVPN gateways. Add this as an exception and select the action to **Bypass**. Make sure to check the box that says *"Treat like local IP address"* to ensure the VPN traffic bypasses Netskope entirely.
+* **Domain Exception:** Add the Fully Qualified Domain Name (FQDN) of your OpenVPN server (e.g., `vpn.yourcompany.com`) to the Domain Exceptions list.
+* **Certificate Pinned Application (Process Bypass):** Add the OpenVPN executable processes (e.g., `openvpn.exe`, `openvpn-gui.exe`) as a Certificate Pinned App exception. This tells the Netskope client to completely ignore traffic generated directly by the OpenVPN client software.
