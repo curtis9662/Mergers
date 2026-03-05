@@ -92,3 +92,65 @@ Log Streaming (CloudConnexa ➡️ Devo):
 CloudConnexa offers log streaming for status changes and high usage notifications.
 
 Architecture Note: While a direct, out-of-the-box integration isn't specified, these streams can be captured and pushed to Devo using the HTTP API methodology outlined above.
+
+# 🚀 Tech Session: Netskope to Devo API Data Ingestion
+
+### Determination: Yes, it is fully supported.
+
+Ingesting Netskope Cloud Access Security Broker (CASB) data into Devo via API is not only possible but natively supported through Devo's **Netskope API V2 Collector** and **Devo SOAR** integrations. 
+
+```
+
+## 🔐 1. Netskope: Generate the REST API v2 Token
+
+To authenticate the connection, Devo requires an API token generated directly from your Netskope tenant. You must strictly use the **v2 API**, as older v1 integrations are deprecated by modern SIEM standards.
+
+### Token Generation Flow
+1. Log in to your Netskope Admin Console as a Tenant Admin.
+2. Navigate to **Settings → Tools → REST API v2**.
+3. Click **New token**.
+4. Define a token name and an appropriate expiration time.
+5. Click **Add endpoint** to select the specific data feeds you want to ingest (e.g., `alerts`, `event_application`, `event_network`, `alert_policy`).
+6. Grant **Read (GET)** privileges to each selected endpoint.
+
+> [!WARNING]  
+> **Secure your token:** Once generated, copy the API token immediately. Netskope will not display the plain-text token again after you close the dialog box.
+
+---
+
+## 📥 2. Devo: Deploying the Netskope Collector
+
+Devo uses a dedicated collector service that persistently polls the Netskope REST API gateway for raw JSON-formatted event and alert logs, formats them, and pushes them into your Devo tables. 
+
+You have two primary deployment architectures:
+
+### Option A: Cloud Collector (SaaS Managed)
+* **Best for:** Zero-infrastructure footprints.
+* **Setup:** Hosted and managed entirely by Devo. You configure it directly within the Devo Collector Server GUI by selecting the Netskope app, entering your Tenant URL, and securely passing your API token.
+
+### Option B: On-Premise Collector (Docker)
+* **Best for:** Strict compliance environments that require API polling traffic to originate from inside a trusted network perimeter before forwarding over a secure Syslog/HTTP channel to Devo.
+* **Setup:** Deployed as a standalone Docker container on your own infrastructure.
+
+```bash
+# Conceptual environment variable mapping for a local Docker deployment
+docker run -d \
+  -e NETSKOPE_TENANT_URL="https://<tenant>.goskope.com" \
+  -e NETSKOPE_API_TOKEN="YOUR_V2_TOKEN" \
+  -e DEVO_DOMAIN="your_devo_domain" \
+  devo-inc/netskope-collector:latest
+[!NOTE]
+
+Handling Rate Limits: Netskope APIs enforce strict global rate limits. The Devo collector is natively engineered to handle Netskope API pagination and rate limits to prevent HTTP 429 Too Many Requests errors. If it encounters an HTTP 409 Concurrency conflict, the collector has built-in backoff timers to gracefully recover without dropping data.
+
+⚡ 3. Devo SOAR Integration (Advanced Automation)
+If you are actively using Devo SOAR for incident response, you can establish a direct bidirectional integration for automated playbooks.
+
+Setup Checklist:
+Navigate to Automations > Integrations in Devo SOAR.
+
+Search for Netskope and create a new connection instance.
+
+Input your Tenant Name (e.g., mycompany from mycompany.goskope.com) and your API Token.
+
+Capabilities: Once linked, you can automate workflows like querying contextual alert data, parsing iterator loops, or executing containment actions directly from Devo.
