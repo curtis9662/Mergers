@@ -1,6 +1,6 @@
-# 🏛️ Enterprise Technology Charter: Mergers, Acquisitions & Divestitures (M&A&D)
+# 🏛️ Enterprise Technology Charter: Mergers, Acquisitions & Divestitures (M,A&D)
 
-> **Executive Summary:** This charter defines the strategic framework, guiding principles, and operational guardrails for technology integration and separation. It ensures that all M&A&D activities accelerate business value, guarantee operational continuity, and strictly protect the enterprise risk posture.
+> **Executive Summary:** This charter defines the strategic framework, guiding principles, and operational guardrails for technology integration and separation. It ensures that all M,A&D activities accelerate business value, guarantee operational continuity, and strictly protect the enterprise risk posture.
 
 ---
 
@@ -17,7 +17,7 @@ These foundational principles dictate decision-making across all deal phases, en
 
 ## 🎯 2. Strategic Objectives
 
-The IT M&A&D function is mandated to deliver a seamless transition while acting as the guardian of enterprise stability.
+The IT M,A&D function is mandated to deliver a seamless transition while acting as the guardian of enterprise stability.
 
 1.  **Ensure Day 1 Business Continuity:** Guarantee zero disruption to revenue-generating operations, customer-facing platforms, and essential employee tools (Identity, Email, ERP).
 2.  **Accelerate Speed to Value:** Execute rapidly using standardized, repeatable playbooks to minimize the duration and cost of Transition Service Agreements (TSAs).
