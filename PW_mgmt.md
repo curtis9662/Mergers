@@ -35,3 +35,68 @@ Here is how they stack up across the top 10 critical enterprise priorities.
 * ⭐ **Choose Bitwarden** if your highest priority is **Cost and Deployment Control**. It is the undisputed king of open-source cloud password management, offering the ability to self-host and keep data entirely within your own network perimeter at an unbeatable price point.
 * ⭐ **Choose KeePass** if your highest priority is **Strictly Air-Gapped, Offline Environments**. It is ideal for isolated lab environments or individual power users with zero budget, but it should generally be avoided for broad enterprise workforce deployments due to synchronization friction and a lack of centralized IT governance.
 * ⭐ **Choose CyberArk** if your highest priority is **Securing IT Infrastructure**. You do not buy CyberArk so the marketing team can share a Twitter password; you buy CyberArk so that a compromised IT admin doesn't result in an attacker taking over your entire server farm. *(Note: Many enterprises actually use CyberArk for IT Privilege, alongside 1Password/Bitwarden for the general workforce).*
+
+---
+---
+
+
+
+# 1Password to KeePass Migration Guide
+
+**Notice:** As per current baseline secpol, 1Password is no longer an approved password management tool (**Example**). All users must migrate their credentials to **KeePass**. 
+
+This guide provides step-by-step instructions for exporting your data from 1Password and securely importing it into KeePass.
+
+---
+
+## ⚠️ Important Security Warning ⚠️
+During this process, you will export your 1Password vault as a `.csv` file. **This file contains all your passwords, usernames, and notes in unencrypted plain text.** * Do not email this file.
+* Do not upload this file to cloud storage (OneDrive, Google Drive, Slack, etc.).
+* **You must permanently delete this file immediately after the migration is complete.**
+
+---
+
+## Phase 1: Exporting Data from 1Password
+
+*Note: 1Password requires you to export your data one vault at a time. If you have multiple vaults (e.g., Personal, Work), you will need to repeat these steps for each.*
+
+1. Open the **1Password** desktop application and unlock it using your Master Password.
+2. Navigate to the vault you wish to export.
+3. In the top menu bar, click **File** > **Export** > **[Name of your Vault]**.
+4. You will be prompted to enter your Master Password again to authorize the export.
+5. In the export dialog window:
+   - Set the **File Format** to **CSV** (`.csv`).
+   - *Do not* choose `1PUX`, as KeePass cannot natively interpret this format.
+6. Click **Export Data**.
+7. Save the `.csv` file to a secure, strictly local location on your machine (e.g., your local `Downloads` or `Desktop` folder).
+
+---
+
+## Phase 2: Importing Data into KeePass
+
+1. Open **KeePass** (KeePass 2.x is recommended).
+2. If you do not already have a KeePass database, go to **File** > **New...** to create one and set a strong Master Key. If you have an existing database, unlock it.
+3. In the top menu bar, click **File** > **Import...**
+4. The "Import File/Data" dialog will appear. Scroll through the list of formats and select **Generic CSV Importer**. 
+   *(Note: Depending on your KeePass version, you may also see an option for **1Password Pro / Any v6/v7 CSV**. You can use this if available, but the Generic Importer works universally).*
+5. Under "Files to be imported", browse for and select the `.csv` file you exported from 1Password.
+6. Click **OK**.
+7. **Mapping the Fields (If using Generic CSV Importer):** - A window will appear showing the columns from your CSV. 
+   - Ensure the columns match KeePass's standard fields. Typically, you will need to align `Title`, `Username`, `Password`, `URL`, and `Notes`.
+   - Once mapped, click **Finish** or **OK**.
+8. Verify your data: Check a few of your imported entries in KeePass to ensure the usernames, passwords, and URLs populated correctly.
+9. Click **File** > **Save** (or `Ctrl + S`) to save your KeePass database.
+
+---
+
+## Phase 3: Post-Migration Cleanup (CRITICAL)
+
+To maintain enterprise security compliance, you must destroy the unencrypted CSV file and remove the unapproved software.
+
+1. **Delete the CSV File:** Locate the `.csv` file you exported in Phase 1. Delete it permanently. 
+   - *Windows:* Select the file and press `Shift + Delete` to bypass the Recycle Bin.
+   - *Mac:* Move the file to the Trash, then immediately empty the Trash.
+2. **Uninstall 1Password:** Once you have verified that all your passwords are safely inside KeePass, uninstall the 1Password application and browser extensions from your machine.
+
+---
+*If you experience any issues mapping your CSV fields or unlocking KeePass, please contact the IT Helpdesk.*
