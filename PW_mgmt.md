@@ -99,4 +99,4 @@ To maintain enterprise security compliance, you must destroy the unencrypted CSV
 2. **Uninstall 1Password:** Once you have verified that all your passwords are safely inside KeePass, uninstall the 1Password application and browser extensions from your machine.
 
 ---
-*If you experience any issues mapping your CSV fields or unlocking KeePass, please contact the IT Helpdesk.*
+*If you experience any issues mapping your CSV fields or unlocking KeePass, please contact the C. Jones.*
