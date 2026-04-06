@@ -39,3 +39,8 @@ Automate user lifecycle management processes (Joiner, Mover, Leaver).
 Decommission legacy directories and systems to reduce complexity and security risk.
 
 <img width="1408" height="768" alt="AD_O_Net" src="https://github.com/user-attachments/assets/20582b86-a6b1-4b60-883e-6d4124fffb20" />
+
+**Okta Platform Expectations**
+
+<img width="1717" height="1989" alt="image" src="https://github.com/user-attachments/assets/4424a18b-e2f1-4569-afb4-20f10b632ede" />
+
