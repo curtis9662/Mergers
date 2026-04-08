@@ -63,12 +63,29 @@ During this process, you will export your 1Password vault as a `.csv` file. **Th
 1. Open the **1Password** desktop application and unlock it using your Master Password.
 2. Navigate to the vault you wish to export.
 3. In the top menu bar, click **File** > **Export** > **[Name of your Vault]**.
-4. You will be prompted to enter your Master Password again to authorize the export.
-5. In the export dialog window:
+4. If in the online version navigate to https://lastpass.com/vault/ then select --Advanced Options-- in the left pane then, Under **MANAGE YOUR VAULT** select --Export--
+
+<img width="1888" height="904" alt="image" src="https://github.com/user-attachments/assets/b56737ef-0f1d-4a1e-b86f-7371deb85b13" />
+```Await the Export Email...```
+You should receive an email as shown:
+<img width="1515" height="718" alt="image" src="https://github.com/user-attachments/assets/8623d320-541e-48d5-b563-58d3f76f1ee4" />
+Once You click "Verify"
+login to complete the export:
+<img width="1917" height="340" alt="image" src="https://github.com/user-attachments/assets/c4365235-df71-4cd3-81c9-8a42a6e8f477" />
+Enter your Master PW
+<img width="1904" height="920" alt="image" src="https://github.com/user-attachments/assets/69a23264-8d3e-4f8c-8450-c709fd298f45" />
+
+Your export will open the "Save As" dialog:
+<img width="1912" height="1024" alt="image" src="https://github.com/user-attachments/assets/16b87e42-1228-4654-bf63-d75a5073e52c" />
+
+Once Completed Open Keepass:
+Follow the steps below:
+6. You will be prompted to enter your Master Password again to authorize the export.
+7. In the export dialog window:
    - Set the **File Format** to **CSV** (`.csv`).
    - *Do not* choose `1PUX`, as KeePass cannot natively interpret this format.
-6. Click **Export Data**.
-7. Save the `.csv` file to a secure, strictly local location on your machine (e.g., your local `Downloads` or `Desktop` folder).
+8. Click **Export Data**.
+9. Save the `.csv` file to a secure, strictly local location on your machine (e.g., your local `Downloads` or `Desktop` folder).
 
 ---
 
