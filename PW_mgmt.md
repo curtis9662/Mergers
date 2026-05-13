@@ -1,5 +1,5 @@
 # 🛡️ MADe Security PW Mgmt Briefing: Credential & Privileged Access Management 
-
+C. Jones - Security Architect
 ## 📋 Summary
 
 Before diving into the detailed matrix, it is crucial to understand the architectural distinctions between these solutions. This is not a simple "apples to apples" comparison:
@@ -14,7 +14,7 @@ Here is how they stack up across the top 10 critical enterprise priorities.
 
 ## 📊 Enterprise Solution Comparison Matrix
 
-| 🎯 Top 10 Considerations | 🛡️ 1Password | 🔐 Bitwarden | 🗄️ KeePass | 🏛️ CyberArk |
+| 🎯 Top Considerations | 🛡️ 1Password | 🔐 Bitwarden | 🗄️ KeePass | 🏛️ CyberArk |
 | :--- | :--- | :--- | :--- | :--- |
 | **1. Security Architecture** | **✅ Pro:** Unique 34-character "Secret Key" adds math-based protection alongside the Master Password.<br>**⚠️ Con:** Closed-source; relies on third-party audits rather than public scrutiny. | **✅ Pro:** 100% Open-source codebase allows community vetting. End-to-end AES-256 encryption.<br>**⚠️ Con:** Requires careful self-hosting configuration if avoiding their SaaS. | **✅ Pro:** 100% offline, zero-knowledge, and open-source. Total data sovereignty.<br>**⚠️ Con:** Security entirely depends on how well the organization secures the `.kdbx` file and master key. | **✅ Pro:** Military-grade PAM. Features session isolation, automatic rotation, and deep infrastructure security.<br>**⚠️ Con:** Complete overkill for standard workforce password management. |
 | **2. Breach History** | **✅ Pro:** Zero breaches of customer vault data.<br>**⚠️ Con:** Experienced an incident in 2023 via their Okta support system (no vaults compromised). | **✅ Pro:** Spotless history with zero major breaches of their cloud infrastructure. Highly transparent. | **✅ Pro:** Impossible to breach via centralized cloud attack (there is no cloud).<br>**⚠️ Con:** If an endpoint is compromised, the local database file and keylogger can bypass protections. | **✅ Pro:** No catastrophic core vault breaches.<br>**⚠️ Con:** A massive enterprise target; requires immediate patching when researchers find vulnerabilities in on-prem deployments. |
@@ -33,7 +33,7 @@ Here is how they stack up across the top 10 critical enterprise priorities.
 
 * ⭐ **Choose 1Password** if your highest priority is **End-User Adoption and UI**. If employees find a security tool hard to use, they will find workarounds (like spreadsheets). 1Password prevents this by feeling like a consumer app while maintaining enterprise-grade security.
 * ⭐ **Choose Bitwarden** if your highest priority is **Cost and Deployment Control**. It is the undisputed king of open-source cloud password management, offering the ability to self-host and keep data entirely within your own network perimeter at an unbeatable price point.
-* ⭐ **Choose KeePass** if your highest priority is **Strictly Air-Gapped, Offline Environments**. It is ideal for isolated lab environments or individual power users with zero budget, but it should generally be avoided for broad enterprise workforce deployments due to synchronization friction and a lack of centralized IT governance.
+* ⭐ **Choose KeePass** if your **highest** priority is **Strictly Air-Gapped, Offline Environments**. It is ideal for **isolated** lab environments or individual power users with zero budget, but it should generally be avoided for broad enterprise workforce deployments due to synchronization friction and a lack of centralized IT governance.
 * ⭐ **Choose CyberArk** if your highest priority is **Securing IT Infrastructure**. You do not buy CyberArk so the marketing team can share a Twitter password; you buy CyberArk so that a compromised IT admin doesn't result in an attacker taking over your entire server farm. *(Note: Many enterprises actually use CyberArk for IT Privilege, alongside 1Password/Bitwarden for the general workforce).*
 
 ---
@@ -43,16 +43,15 @@ Here is how they stack up across the top 10 critical enterprise priorities.
 
 # 1Password to KeePass Migration Guide
 
-**Notice:** As per current baseline secpol, 1Password is no longer an approved password management tool (**Example**). All users must migrate their credentials to **KeePass**. 
 
 This guide provides step-by-step instructions for exporting your data from 1Password and securely importing it into KeePass.
-
+⚠️⚠️⚠️⚠️⚠️ DISREGARD THE SCREENSHOTS for 1PASS Users ⚠️⚠️⚠️⚠️⚠️ The Process is essentialy technically congruent.
 ---
 
 ## ⚠️ Important Security Warning ⚠️
 During this process, you will export your 1Password vault as a `.csv` file. **This file contains all your passwords, usernames, and notes in unencrypted plain text.** * Do not email this file.
 * Do not upload this file to cloud storage (OneDrive, Google Drive, Slack, etc.).
-* **You must permanently delete this file immediately after the migration is complete.**
+* **You must permanently **delete** this file immediately after the migration is complete.**
 
 ---
 
@@ -64,7 +63,7 @@ During this process, you will export your 1Password vault as a `.csv` file. **Th
 2. Navigate to the vault you wish to export.
 3. In the top menu bar, click **File** > **Export** > **[Name of your Vault]**.
 4. If in the online version navigate to https://lastpass.com/vault/ then select --Advanced Options-- in the left pane then, Under **MANAGE YOUR VAULT** select --Export--
-
+⚠️⚠️⚠️⚠️⚠️ DISREGARD THE SCREENSHOTS for 1PASS Users ⚠️⚠️⚠️⚠️⚠️ The Process is essentialy technically congruent.
 <img width="1888" height="904" alt="image" src="https://github.com/user-attachments/assets/b56737ef-0f1d-4a1e-b86f-7371deb85b13" />
 ```Await the Export Email...```
 You should receive an email as shown:
@@ -77,7 +76,7 @@ Enter your Master PW
 
 Your export will open the "Save As" dialog:
 <img width="1912" height="1024" alt="image" src="https://github.com/user-attachments/assets/16b87e42-1228-4654-bf63-d75a5073e52c" />
-
+⚠️⚠️⚠️⚠️⚠️ ⚠️⚠️⚠️⚠️⚠️ 
 Once Completed Open Keepass:
 Follow the steps below:
 6. You will be prompted to enter your Master Password again to authorize the export.
