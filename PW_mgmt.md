@@ -59,7 +59,7 @@ During this process, you will export your 1Password vault as a `.csv` file. **Th
 ## Phase 1: Exporting Data from 1Password
 
 *Note: 1Password requires you to export your data one vault at a time. If you have multiple vaults (e.g., Personal, Work), you will need to repeat these steps for each.*
-
+⚠️⚠️⚠️⚠️⚠️ DISREGARD THE SCREENSHOTS for 1PASS Users ⚠️⚠️⚠️⚠️⚠️ The Process is essentialy technically congruent.
 1. Open the **1Password** desktop application and unlock it using your Master Password.
 2. Navigate to the vault you wish to export.
 3. In the top menu bar, click **File** > **Export** > **[Name of your Vault]**.
