@@ -45,6 +45,7 @@ Here is how they stack up across the top 10 critical enterprise priorities.
 
 
 This guide provides step-by-step instructions for exporting your data from 1Password and securely importing it into KeePass.
+
 ⚠️⚠️⚠️⚠️⚠️ DISREGARD THE SCREENSHOTS for 1PASS Users ⚠️⚠️⚠️⚠️⚠️ The Process is essentialy technically congruent.
 ---
 
@@ -58,11 +59,13 @@ During this process, you will export your 1Password vault as a `.csv` file. **Th
 ## Phase 1: Exporting Data from 1Password
 
 *Note: 1Password requires you to export your data one vault at a time. If you have multiple vaults (e.g., Personal, Work), you will need to repeat these steps for each.*
+
 ⚠️⚠️⚠️⚠️⚠️ DISREGARD THE SCREENSHOTS for 1PASS Users ⚠️⚠️⚠️⚠️⚠️ The Process is essentialy technically congruent.
 1. Open the **1Password** desktop application and unlock it using your Master Password.
 2. Navigate to the vault you wish to export.
 3. In the top menu bar, click **File** > **Export** > **[Name of your Vault]**.
 4. If in the online version navigate to https://lastpass.com/vault/ then select --Advanced Options-- in the left pane then, Under **MANAGE YOUR VAULT** select --Export--
+5. 
 ⚠️⚠️⚠️⚠️⚠️ DISREGARD THE SCREENSHOTS for 1PASS Users ⚠️⚠️⚠️⚠️⚠️ The Process is essentialy technically congruent.
 <img width="1888" height="904" alt="image" src="https://github.com/user-attachments/assets/b56737ef-0f1d-4a1e-b86f-7371deb85b13" />
 ```Await the Export Email...```
