@@ -41,3 +41,14 @@
     </div>
 </body>
 </html>
+Knox Community Hospital- Access to EHR is web based. Their EHR system is Veradigm. (Must be logged into our VPN) We also use the DUO app for 2FA
+
+Jackson Hospital-Access to EHR is web based. Their EHR is Athena. (Must be logged into our VPN) JHS does not make us use a 2FA but a cell phone number has to be on file for remote access
+
+Southeast Health-Access to EHR is launched in Omnissa Horizon Client. Southeast Health EHR is EPIC. We also use Imprivata app for 2FA
+
+Nashville General -Access to EHR is launched in Omnissa Horizon Client. Their EHR is Cerner. We also use the DUO app for 2FA. NGH's VPN is connected to via Cisco Secure Client.
+
+Community Hospital of Anaconda-Access to EHR has us logged in to a Microsoft account that is registered to the client. They have their own VPN process. Their EHR is EPIC.
+
+Auburn -Access to EHR is through Citrix workspace. Their EHR is cerner.We also use Imprivata app for 2FA
