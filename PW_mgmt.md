@@ -99,16 +99,6 @@ You are almost done! We just need to clean up that exposed file from Step 1 to k
 
 ### 🎉 Congratulations! 🎉
 You did it! You have successfully migrated your data and taken full control of your passwords. Give yourself a high-five! 🙌
----
-
-## Phase 3: Post-Migration Cleanup (CRITICAL)
-
-To maintain enterprise security compliance, you must destroy the unencrypted CSV file and remove the unapproved software.
-
-1. **Delete the CSV File:** Locate the `.csv` file you exported in Phase 1. Delete it permanently. 
-   - *Windows:* Select the file and press `Shift + Delete` to bypass the Recycle Bin.
-   - *Mac:* Move the file to the Trash, then immediately empty the Trash.
-2. **Uninstall 1Password:** Once you have verified that all your passwords are safely inside KeePass, uninstall the 1Password application and browser extensions from your machine.
 
 ---
 *If you experience any issues mapping your CSV fields or unlocking KeePass, please contact Curtis Jones.*
