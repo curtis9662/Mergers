@@ -3,6 +3,10 @@
 ## Executive Summary
 The deployment of hardware-backed security keys shifts the authentication paradigm from shared secrets to public-key cryptography. By binding authentication responses to the specific TLS session and relying party origin, hardware tokens mathematically neutralize automated credential stuffing and real-time phishing relays.
 
+`CITE:`
+```
+https://www.yubico.com/works-with-yubikey/catalog/?sort=popular-for-business
+```
 ## Operational Table
 
 | Protocol / Standard | Primary Enterprise Use Case | Cryptographic Operation | Threat Mitigation & Efficacy |
