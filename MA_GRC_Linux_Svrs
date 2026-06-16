@@ -1,0 +1,202 @@
+#!/bin/bash
+# ==============================================================================
+# SYNOPSIS
+#   M&A Security Due Diligence, GRC, Integration Validator, and Server Analyzer.
+# DESCRIPTION
+#   Pulls M&A duties from GitHub Markdown files, performs baseline validations 
+#   for Linux servers, enumerates systemd services (Run As, Binary Paths), 
+#   and generates an HTML Report.
+# ==============================================================================
+
+TARGET_ENTITY_NAME=$(hostname)
+OUTPUT_HTML_PATH="/tmp/MA_Security_Report_${TARGET_ENTITY_NAME}.html"
+DATE=$(date +"%Y-%m-%d %H:%M:%S")
+
+# Raw GitHub URLs for the Markdown Files
+declare -A REPO_URLS=(
+    ["Due Diligence"]="https://raw.githubusercontent.com/curtis9662/Mergers/MERGErs/Due_Diligence.md"
+    ["GRC"]="https://raw.githubusercontent.com/curtis9662/Mergers/MERGErs/GRC.md"
+    ["Integration"]="https://raw.githubusercontent.com/curtis9662/Mergers/MERGErs/Integration_Enablement.md"
+)
+
+# Initialize Counters and HTML placeholders
+PASS_COUNT=0
+FAIL_COUNT=0
+MANUAL_COUNT=0
+TASKS_HTML=""
+
+echo -e "\e[36mStarting M&A Security Validation for $TARGET_ENTITY_NAME...\e[0m"
+
+# ====================================================================
+# 1. Fetch and Parse Markdown Duties & Linux Validations
+# ====================================================================
+for CATEGORY in "${!REPO_URLS[@]}"; do
+    URL="${REPO_URLS[$CATEGORY]}"
+    echo -e "\e[33mFetching $CATEGORY from GitHub...\e[0m"
+    
+    # Fetch content using curl
+    RAW_CONTENT=$(curl -sL "$URL")
+    if [ -z "$RAW_CONTENT" ]; then
+        echo -e "\e[31mFailed to fetch $CATEGORY. Ensure network connectivity.\e[0m"
+        continue
+    fi
+
+    # Parse numbered list duties using grep and while loop
+    while IFS= read -r line; do
+        # Extract task name and description using sed
+        TASK_NAME=$(echo "$line" | sed -E 's/^[0-9]+\.\s+\*\*(.*)\*\*.*$/\1/' | sed 's/:$//')
+        TASK_DESC=$(echo "$line" | sed -E 's/^[0-9]+\.\s+\*\*.*\*\*(.*)$/\1/' | sed -e 's/^[[:space:]]*//' -e 's/^://' -e 's/^[[:space:]]*//')
+
+        STATUS="Manual Review"
+        STATUS_COLOR="#f39c12" # Orange
+        TECH_NOTES="Process validation required by GRC Assessor."
+
+        # Linux-Specific Automated Checks
+        if echo "$TASK_NAME" | grep -qiE "Firewall|Network"; then
+            if command -v ufw >/dev/null 2>&1 && sudo ufw status | grep -qw "active"; then
+                STATUS="Passed"; STATUS_COLOR="#27ae60"; TECH_NOTES="UFW Firewall is Active."
+            elif command -v firewall-cmd >/dev/null 2>&1 && sudo firewall-cmd --state 2>/dev/null | grep -qw "running"; then
+                STATUS="Passed"; STATUS_COLOR="#27ae60"; TECH_NOTES="Firewalld is Running."
+            elif command -v iptables >/dev/null 2>&1 && sudo iptables -L -n | grep -q "ACCEPT"; then
+                STATUS="Manual Review"; STATUS_COLOR="#f39c12"; TECH_NOTES="Custom iptables rules found. Manual review required."
+            else
+                STATUS="Failed"; STATUS_COLOR="#e74c3c"; TECH_NOTES="No active firewall (UFW/Firewalld) detected."
+            fi
+        elif echo "$TASK_NAME" | grep -qiE "Identity|Active Directory|Password"; then
+            STATUS="Passed"
+            STATUS_COLOR="#27ae60"
+            TECH_NOTES="Requires PAM/SSSD configuration review."
+        elif echo "$TASK_NAME" | grep -qiE "Endpoint|EDR|Antivirus"; then
+            if systemctl is-active --quiet mdatp; then
+                STATUS="Passed"; STATUS_COLOR="#27ae60"; TECH_NOTES="Defender for Endpoint (mdatp) is Running."
+            elif systemctl is-active --quiet falcon-sensor; then
+                STATUS="Passed"; STATUS_COLOR="#27ae60"; TECH_NOTES="CrowdStrike Falcon is Running."
+            elif systemctl is-active --quiet clamav-daemon; then
+                STATUS="Passed"; STATUS_COLOR="#27ae60"; TECH_NOTES="ClamAV Daemon is Running."
+            else
+                STATUS="Failed"; STATUS_COLOR="#e74c3c"; TECH_NOTES="No recognized enterprise EDR/AV service detected."
+            fi
+        fi
+
+        # Update Counters
+        if [ "$STATUS" == "Passed" ]; then ((PASS_COUNT++)); fi
+        if [ "$STATUS" == "Failed" ]; then ((FAIL_COUNT++)); fi
+        if [ "$STATUS" == "Manual Review" ]; then ((MANUAL_COUNT++)); fi
+
+        # Build Task HTML row
+        TASKS_HTML+="<tr><td><strong>${CATEGORY}</strong></td><td>${TASK_NAME}</td><td><span class='badge' style='background-color:${STATUS_COLOR}'>${STATUS}</span></td><td>${TECH_NOTES}</td></tr>"
+
+    done < <(echo "$RAW_CONTENT" | grep -E '^[0-9]+\.\s+\*\*')
+done
+
+# ====================================================================
+# 2. Linux Server Service Enumeration (Systemd)
+# ====================================================================
+echo -e "\e[33mEnumerating Linux Server Services for Security Analysis...\e[0m"
+
+SERVICES_HTML=""
+TOTAL_SVC_COUNT=0
+RUNNING_SVC_COUNT=0
+
+# Fetch all service units
+SERVICES=$(systemctl list-units --type=service --all --plain --no-legend | awk '{print $1}')
+
+for SVC in $SERVICES; do
+    ((TOTAL_SVC_COUNT++))
+    
+    # Query systemd for specific granular details
+    DISPLAY_NAME=$(systemctl show "$SVC" -p Description --value 2>/dev/null)
+    STATE=$(systemctl show "$SVC" -p SubState --value 2>/dev/null)
+    START_MODE=$(systemctl show "$SVC" -p UnitFileState --value 2>/dev/null)
+    
+    # Extract "Run As" User
+    RUN_AS=$(systemctl show "$SVC" -p User --value 2>/dev/null)
+    if [ -z "$RUN_AS" ]; then RUN_AS="root (default)"; fi
+
+    # Extract Binary Path from ExecStart block
+    EXEC_START=$(systemctl show "$SVC" -p ExecStart --value 2>/dev/null)
+    BIN_PATH=$(echo "$EXEC_START" | grep -oE 'path=[^; ]+' | head -n 1 | cut -d= -f2)
+    if [ -z "$BIN_PATH" ]; then BIN_PATH="N/A"; fi
+
+    ROW_CLASS="svc-stopped"
+    if [ "$STATE" == "running" ]; then
+        ((RUNNING_SVC_COUNT++))
+        ROW_CLASS="svc-running"
+    fi
+
+    # Build Service HTML row
+    SERVICES_HTML+="<tr class='${ROW_CLASS}'><td><strong>${SVC}</strong></td><td>${DISPLAY_NAME}</td><td>${STATE}</td><td>${START_MODE}</td><td>${RUN_AS}</td><td style='word-break: break-all; font-family: monospace;'>${BIN_PATH}</td></tr>"
+done
+
+# ====================================================================
+# 3. Generate HTML Report
+# ====================================================================
+echo -e "\e[33mGenerating HTML Dashboard...\e[0m"
+
+cat <<EOF > "$OUTPUT_HTML_PATH"
+<!DOCTYPE html>
+<html>
+<head>
+    <title>M&A Security Assessment: $TARGET_ENTITY_NAME</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 1400px; margin: auto; }
+        h1, h2 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-top: 40px;}
+        .dashboard { display: flex; justify-content: space-between; gap: 15px; margin-bottom: 30px; }
+        .card { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); flex: 1; text-align: center; }
+        .card h3 { margin: 0; font-size: 20px; }
+        .card p { font-size: 32px; font-weight: bold; margin: 10px 0 0 0; }
+        .pass { color: #27ae60; } .fail { color: #e74c3c; } .manual { color: #f39c12; } .info { color: #2980b9; }
+        table { width: 100%; border-collapse: collapse; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 30px; font-size: 14px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #34495e; color: #fff; position: sticky; top: 0; }
+        tr:hover { background-color: #f1f1f1; }
+        .badge { padding: 5px 10px; border-radius: 4px; color: #fff; font-weight: bold; font-size: 12px; }
+        .svc-running { background-color: #eafaf1; }
+        .svc-stopped { background-color: #fdf2e9; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Enterprise M&A Security Report</h1>
+        <p><strong>Target Entity:</strong> $TARGET_ENTITY_NAME | <strong>Date:</strong> $DATE</p>
+
+        <h2>Executive Overview</h2>
+        <div class="dashboard">
+            <div class="card"><h3 class="pass">Automated Passes</h3><p class="pass">$PASS_COUNT</p></div>
+            <div class="card"><h3 class="fail">Critical Failures</h3><p class="fail">$FAIL_COUNT</p></div>
+            <div class="card"><h3 class="manual">Manual Audits Required</h3><p class="manual">$MANUAL_COUNT</p></div>
+            <div class="card"><h3 class="info">Total Server Services</h3><p class="info">$TOTAL_SVC_COUNT</p></div>
+            <div class="card"><h3 class="info">Running Services</h3><p class="info">$RUNNING_SVC_COUNT</p></div>
+        </div>
+
+        <h2>Technical Overview (Task Validation)</h2>
+        <table>
+            <tr>
+                <th>Phase / Category</th>
+                <th>Security Duty</th>
+                <th>Status</th>
+                <th>Technical Notes / Artifacts</th>
+            </tr>
+            $TASKS_HTML
+        </table>
+
+        <h2>Linux Server Service Analysis</h2>
+        <p><em>Note: Highlighting running systemd services. Review 'Run As Account' and 'Binary Path' for rogue configurations or overprivileged applications. Default root runs may show as "root (default)".</em></p>
+        <table>
+            <tr>
+                <th>Service Name</th>
+                <th>Display Name</th>
+                <th>State</th>
+                <th>Start Mode</th>
+                <th>Run As Account</th>
+                <th>Binary Path</th>
+            </tr>
+            $SERVICES_HTML
+        </table>
+    </div>
+</body>
+</html>
+EOF
+
+echo -e "\e[32mValidation Complete! Report generated at: $OUTPUT_HTML_PATH\e[0m"
