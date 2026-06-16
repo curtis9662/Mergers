@@ -6,7 +6,7 @@
     enumerates Windows Server services for security analysis, and generates an HTML Report.
 #>
 param (
-    [string]$TargetEntityName = "Acquired_Entity_Alpha",
+    [string]$TargetEntityName = $env:COMPUTERNAME,
     [string]$OutputHtmlPath = "$env:USERPROFILE\Desktop\MA_Security_Report.html"
 )
 
