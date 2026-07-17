@@ -32,6 +32,7 @@ sequenceDiagram
 ```
 
 ---
+``` The Following applies ONLY IF a client VPN is installed ```
 
 ## 2. Architecture Diagram of Network Flow
 
