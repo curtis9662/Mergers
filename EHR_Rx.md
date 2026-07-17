@@ -1,4 +1,5 @@
 # Remote Pharmacy Manager Connectivity Architecture & Deployment Runbook
+``` By: Curtis Jones ```
 
 ## Problem Statement Summary
 Remote pharmacy managers on `mydomain.org` endpoints running Zscaler must authenticate and access external healthcare networks via web portals and externally managed VPNs using external identities (`otherdomain.com`), without network conflicts or security degradation.
