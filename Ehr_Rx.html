@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EHR_Rx - Remote Pharmacy Manager Connectivity Architecture</title>
+<style>
+/* GitHub Markdown CSS Emulation */
+body {
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+    font-size: 16px;
+    line-height: 1.5;
+    word-wrap: break-word;
+    padding: 40px;
+    max-width: 900px;
+    margin: 0 auto;
+    color: #24292f;
+    background-color: #ffffff;
+}
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 24px;
+    margin-bottom: 16px;
+    font-weight: 600;
+    line-height: 1.25;
+}
+h1 { font-size: 2em; border-bottom: 1px solid #d0d7de; padding-bottom: 0.3em; }
+h2 { font-size: 1.5em; border-bottom: 1px solid #d0d7de; padding-bottom: 0.3em; }
+h3 { font-size: 1.25em; }
+p, blockquote, ul, ol, dl, table, pre, details {
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+hr {
+    height: 0.25em;
+    padding: 0;
+    margin: 24px 0;
+    background-color: #d0d7de;
+    border: 0;
+}
+code {
+    font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+    font-size: 85%;
+    background-color: rgba(175,184,193,0.2);
+    border-radius: 6px;
+    padding: 0.2em 0.4em;
+}
+pre {
+    background-color: #f6f8fa;
+    border-radius: 6px;
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+}
+pre code {
+    background-color: transparent;
+    padding: 0;
+    font-size: 100%;
+    border-radius: 0;
+}
+a { color: #0969da; text-decoration: none; }
+a:hover { text-decoration: underline; }
+ul, ol { padding-left: 2em; }
+li { word-wrap: break-all; }
+li>p { margin-top: 16px; }
+li + li { margin-top: 0.25em; }
+strong { font-weight: 600; }
+em { font-style: italic; }
+.mermaid {
+    background-color: #ffffff;
+    padding: 16px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+    mermaid.initialize({ startOnLoad: true, theme: 'default' });
+</script>
+</head>
+<body>
+
+<h1>Remote Pharmacy Manager Connectivity Architecture &amp; Deployment Runbook</h1>
+<p><code>By: Curtis Jones</code></p>
+
+<h2>Problem Statement Summary</h2>
+<p>Remote pharmacy managers on <code>mydomain.org</code> endpoints running Zscaler must authenticate and access external healthcare networks via web portals and externally managed VPNs using external identities (<code>otherdomain.com</code>), without network conflicts or security degradation.</p>
+
+<hr>
+
+<h2>1. Architecture Diagram of Authentication Flow</h2>
+<p>This diagram illustrates the dual-identity requirement. The endpoint and network transport layer authenticate using the internal identity (<code>mydomain.org</code>), while the application layer authenticates using the external identity (<code>otherdomain.com</code>).</p>
+
+<div class="mermaid">
+sequenceDiagram
+    autonumber
+    participant RM as Remote Rx Manager
+    participant LP as Laptop (mydomain.org)
+    participant ZCC as Zscaler Client Connector
+    participant IDP1 as MyDomain IdP (Okta/Entra)
+    participant IDP2 as OtherDomain IdP
+    participant EXT as External Web/VPN
+
+    RM->>LP: OS Login (john.doe@mydomain.org)
+    LP->>ZCC: Auto-launch on Startup
+    ZCC->>IDP1: ZPA/ZIA SAML Auth Request
+    IDP1-->>ZCC: Token Issued (Transport Secured)
+    RM->>EXT: Access External Portal or Launch External VPN
+    EXT->>IDP2: Redirect for Application Auth
+    RM->>IDP2: Login (john.doe@otherdomain.com) + MFA
+    IDP2-->>EXT: Token Issued (Application Secured)
+    EXT-->>RM: Access Granted (Perform Rx Tasks)
+</div>
+
+<hr>
+<p><code>The Following applies ONLY IF a client VPN is installed</code></p>
+
+<h2>2. Architecture Diagram of Network Flow</h2>
+<p>To prevent Zscaler from intercepting and breaking the external VPN connection (e.g., Cisco AnyConnect, GlobalProtect), a "VPN Bypass" must be configured. Web traffic securely flows through Zscaler Internet Access (ZIA).</p>
+
+<div class="mermaid">
+graph TD
+    subgraph MyDomain Endpoint [Managed Endpoint - mydomain.org]
+        RM[Remote Pharmacy Manager]
+        ZCC[Zscaler Client Connector]
+        EXT_VPN[External VPN Client]
+    end
+
+    RM -->|Browser/Web Traffic| ZCC
+    RM -->|Launch VPN| EXT_VPN
+
+    subgraph Zscaler Cloud
+        ZIA[Zscaler Internet Access]
+        CBI[Cloud Browser Isolation - Optional]
+    end
+
+    subgraph Internet Routing
+        DIRECT[Direct Internet Bypass]
+    end
+
+    subgraph External Healthcare Network [otherdomain.com]
+        WEB_PORTAL[Web-based Rx Portals]
+        VPN_GW[External VPN Gateway]
+        INT_APP[Internal Pharmacy DBs & Apps]
+    end
+
+    %% Web Flow
+    ZCC -->|Encapsulated Proxy| ZIA
+    ZIA -->|Optional PHI Protection| CBI
+    CBI --> WEB_PORTAL
+    ZIA --> WEB_PORTAL
+
+    %% VPN Bypass Flow
+    EXT_VPN -.->|Bypasses ZCC via App Profile| DIRECT
+    DIRECT --> VPN_GW
+    VPN_GW --> INT_APP
+    
+    classDef bypass stroke:#ff3333,stroke-width:2px,stroke-dasharray: 5 5;
+    class EXT_VPN,DIRECT,VPN_GW bypass;
+</div>
+
+<hr>
+
+<h2>3. Architecture Diagram of Business Continuity (BCDR)</h2>
+<p>This flowchart outlines the resilience strategy. It determines how the remote manager maintains access to external pharmacy networks during Zscaler outages, external VPN outages, or local connectivity failures.</p>
+
+<div class="mermaid">
+graph TD
+    Start[Access Requested] --> ZCC_Check{Is Zscaler Cloud Available?}
+    
+    %% Zscaler Available Path
+    ZCC_Check -- Yes --> VPN_Check{Is Ext VPN / Web Portal Up?}
+    VPN_Check -- Yes --> Normal[Normal Operations: Fulfilling Prescriptions]
+    VPN_Check -- No --> Ext_Failover[Failover to Alternate Ext Gateway / Web Portal]
+    Ext_Failover --> Ext_BCDR{Still Down?}
+    Ext_BCDR -- Yes --> Offline_Rx[Initiate Offline Rx / Phone Operations]
+    Ext_BCDR -- No --> Normal
+    
+    %% Zscaler Down Path
+    ZCC_Check -- No --> ZCC_Fail{ZCC Fail-Open Enabled?}
+    ZCC_Fail -- Yes --> Direct_Net[Traffic routes direct to Internet]
+    Direct_Net --> VPN_Check
+    ZCC_Fail -- No --> Locked[Endpoint Locked Down for Security]
+    Locked --> Wait[Wait for Zscaler Recovery or IT Override]
+
+    classDef normal fill:#d4edda,stroke:#28a745;
+    classDef warning fill:#fff3cd,stroke:#ffc107;
+    classDef critical fill:#f8d7da,stroke:#dc3545;
+    
+    class Normal normal;
+    class ZCC_Check,VPN_Check,Ext_BCDR warning;
+    class Locked,Offline_Rx critical;
+</div>
+
+<hr>
+
+<h2>4. Technical Deployment Runbook</h2>
+<p>This runbook provides the necessary configuration steps to implement the architecture. The primary technical hurdle is ensuring Zscaler Client Connector (ZCC) does not interfere with the external VPN client (encapsulation loops or MTU drops) and that SSL inspection doesn't break external certificate pinning.</p>
+
+<h3>Phase 1: Prerequisite Discovery</h3>
+<ol>
+<li><strong>Identify External VPN Gateways:</strong> Obtain the FQDNs and IP addresses of the <code>otherdomain.com</code> VPN gateways.</li>
+<li><strong>Identify External VPN Executables:</strong> Identify the process names of the 3rd-party VPN client (e.g., <code>vpnui.exe</code>, <code>vpngui.exe</code>, <code>PanGPA.exe</code>).</li>
+<li><strong>Identify Web Portals:</strong> List all specific FQDNs for the external web portals accessed via browser.</li>
+</ol>
+
+<h3>Phase 2: Zscaler Client Connector (ZCC) Configuration</h3>
+<p>To allow the external VPN to connect without ZCC interception:</p>
+<ol>
+<li>Navigate to <strong>Zscaler Mobile Admin Portal</strong> &gt; <strong>App Profiles</strong>.</li>
+<li>Select the App Profile assigned to the Pharmacy Managers.</li>
+<li>Locate the <strong>VPN Bypass</strong> section.</li>
+<li>Add the external VPN gateway IP subnets to the <strong>Bypass specific IPs/Subnets</strong> list.</li>
+<li><em>Alternative (Endpoint level):</em> Under <strong>Hostname or IP Address Bypass for VPN Gateway</strong>, add the external FQDNs.</li>
+</ol>
+
+<h3>Phase 3: PAC File Modifications</h3>
+<p>Ensure the system proxy does not attempt to proxy the external VPN traffic:</p>
+<ol>
+<li>Open your ZIA Forwarding / PAC file editor.</li>
+<li>Add a bypass rule for the external VPN domains and IP addresses:
+<pre><code class="language-javascript">// Bypass External Healthcare Network VPN Gateways
+if (dnsDomainIs(host, ".otherdomain.com") || 
+    isInNet(resolved_ip, "X.X.X.X", "255.255.255.0")) {
+    return "DIRECT";
+}</code></pre></li>
+<li>Save and deploy the PAC file version.</li>
+</ol>
+
+<h3>Phase 4: ZIA SSL Inspection Exclusions</h3>
+<p>Many external VPN clients and healthcare portals use strict Certificate Pinning. Zscaler’s SSL inspection will break these connections.</p>
+<ol>
+<li>Navigate to <strong>Zscaler Internet Access (ZIA)</strong> &gt; <strong>Policy</strong> &gt; <strong>SSL Inspection</strong>.</li>
+<li>Create a new SSL Inspection Policy Rule.</li>
+<li><strong>Name:</strong> <code>Bypass SSL - External Healthcare Domain</code>.</li>
+<li><strong>URL Categories / Custom Domains:</strong> Add the FQDNs of the external Web Portals and VPN Gateways.</li>
+<li><strong>Action:</strong> <code>Do Not Inspect</code>.</li>
+<li>Ensure this rule is prioritized above any "Inspect All" rules.</li>
+</ol>
+
+<h3>Phase 5: Identity &amp; Browser Setup (Endpoint Management)</h3>
+<ol>
+<li><strong>Browser Profiles:</strong> Deploy a managed browser configuration (e.g., Edge/Chrome) with a dedicated profile for <code>otherdomain.com</code>. This separates <code>mydomain.org</code> cookies/cache from the external identity and prevents single-sign-on (SSO) conflicts.</li>
+<li><strong>Credential Management:</strong> Advise users to use their password manager for <code>john.doe@otherdomain.com</code>, as it will not sync with their internal Active Directory password.</li>
+</ol>
+
+<h3>Phase 6: Testing &amp; Validation</h3>
+<ol>
+<li>Have a test Pharmacy Manager log into the Windows endpoint. Verify Zscaler authenticates transparently.</li>
+<li>Launch the External VPN client and authenticate with the external identity.</li>
+<li>Validate connection stability (check for MTU drops or reconnect loops). </li>
+<li>Verify internal routing (e.g., run <code>tracert</code> to an internal <code>otherdomain.com</code> IP to ensure traffic is flowing through the external VPN tunnel and not being captured by Zscaler).</li>
+<li>Access the web portal through the browser and verify successful external IdP redirection.</li>
+</ol>
+
+<hr>
+<p><strong><a href="https://curtis9662.github.io/">Curtis Jones - Security Architect Portfolio</a></strong> showcases his 18+ years of high-level expertise in cybersecurity, Identity Access Management (IAM), and Secure Hybrid-Cloud Architectures. The site serves as a comprehensive professional profile, featuring his architectural timeline, core technical skills like DevSecOps and AI defense, and direct links to his project repositories and operational workflows.</p>
+
+</body>
+</html>
