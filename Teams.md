@@ -4,7 +4,7 @@
 
 Make Change Here → https://admin.teams.microsoft.com/company-wide-settings/external-communications
 
-Add UPMC Domain for cross environment collab
+Add <ORG> Domain for cross environment collab
 
 <img width="1405" height="1251" alt="image" src="https://github.com/user-attachments/assets/765432cf-8d8c-475d-934b-13f543659044" />
 
