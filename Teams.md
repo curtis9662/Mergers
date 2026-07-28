@@ -8,7 +8,8 @@ Use this if you simply want users to be able to search for, call, and message pe
    * Allow all external domains: (Default) Open federation with any other Teams organization.
    * Allow only specific external domains: You must click Add external domains and enter the exact domains (e.g., partnercompany.com) you want to allow.
 4. **Save and test:** Click Save. It may take a few hours for federation policies to fully sync. Test the configuration by sending a chat request to a user in the federated organization.
-<img width="1096" height="1276" alt="image" src="https://github.com/user-attachments/assets/4bd481e6-aa0e-421c-adb5-d3d8d8cce114" />
+<img width="928" height="1259" alt="image" src="https://github.com/user-attachments/assets/cd9e5bf0-06ad-4391-a692-0dd3f1c1032a" />
+
 
 Make Change Here → https://admin.teams.microsoft.com/company-wide-settings/external-communications
 
