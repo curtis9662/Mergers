@@ -204,3 +204,8 @@ $FinalHtml | Out-File -FilePath $OutputHtmlPath -Encoding UTF8
 
 Write-Host "Validation Complete! Report generated at: $OutputHtmlPath" -ForegroundColor Green
 Invoke-Item $OutputHtmlPath
+
+//
+```
+This PowerShell automation tool provides a rapid, quantitative assessment of a target environment's security posture by generating an executive dashboard that explicitly tallies automated baseline passes, critical failures, and pending manual audits. It systematically enumerates all existing machine tasks, applications, and Windows services, extracting critical configuration data such as execution states, binary paths, and the specific accounts running them. By delivering this immediate statistical visibility, the script empowers leadership to preemptively identify system vulnerabilities (like unquoted service paths), expose unauthorized Shadow IT deployments, and definitively close operational support gaps prior to finalizing an integration.
+```
