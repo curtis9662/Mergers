@@ -138,3 +138,7 @@ This is done via **Playbooks** (Azure Logic Apps):
     *   **Enrich Incident:** Query VirusTotal or another API to gather more context on the IP and append that information to the Sentinel Incident for the analyst.
 
 > **Key insight:** The automation rule is the mechanism of the preemptive strike. By linking the identity plane (Entra) directly to the intelligence feed via Sentinel, you neutralize the threat vector the moment it is detected, breaking the kill chain early.
+>
+```
+The Maester test suite is an automated, PowerShell-based continuous monitoring framework designed to validate cloud tenant configurations against established security benchmarks like CISA and EIDSCA. By executing programmatic compliance checks across the environment, the tool delivers a quantitative analysis of existing applications, active services, and machine tasks, enabling security teams to explicitly measure the scale of undocumented shadow IT. This automated baseline enumeration systematically identifies hidden vulnerabilities and support gaps, equipping executives with continuous, data-driven metrics to preemptively secure the organization's infrastructure.
+```
