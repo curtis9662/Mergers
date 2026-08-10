@@ -31,108 +31,129 @@ Use this if you need external individuals to actually join your specific Teams, 
 
 ## Security Architecture Diagram:
 
-[View Full Diagram](https://curtis9662.github.io/Mergers/blob/main/Teams%20Collab.drawio.html)
-
-
-
 ```mermaid
-flowchart LR
-    %% Title
-    %% Teams Application Security Architecture
+
+flowchart TD
+    %% Define color classes matching the original draw.io hex codes
+    classDef tenant fill:#f5f5f5,stroke:#666666,stroke-width:2px;
+    classDef client fill:#e8f4f8,stroke:#6c8ebf;
+    classDef entra fill:#fff0e6,stroke:#d79b00;
+    classDef platform fill:#e8f5e9,stroke:#82b366;
+    classDef backend fill:#fce4ec,stroke:#b85450;
+    classDef data fill:#fff9e6,stroke:#d6b656;
+    classDef secops fill:#f5f5f5,stroke:#666666;
+    classDef extSys fill:#e8f4f8,stroke:#6c8ebf;
     
-    subgraph ExtClient["External Teams Client"]
-        User2["User<br/>Desktop / Mobile / Web"]
-        Manifest2["Teams App Manifest<br/>Tabs, Bots, Permissions"]
+    classDef user fill:#dae8fc,stroke:#6c8ebf;
+    classDef manifest fill:#fff2cc,stroke:#d6b656;
+    classDef auth fill:#fff2cc,stroke:#d6b656;
+    classDef collabAuth fill:#fff2cc,stroke:#33ff33,stroke-width:2px;
+    classDef platSvc fill:#d5e8d4,stroke:#82b366;
+    classDef backSvc fill:#f8cecc,stroke:#b85450;
+    classDef db fill:#fff2cc,stroke:#d6b656;
+    classDef secLog fill:#e8e8e8,stroke:#666666;
+
+    subgraph ExtClientWrapper ["External Teams Client"]
+        ExtUser["User<br>Desktop / Mobile / Web"]:::user
+        ExtManifest["Teams App Manifest<br>Tabs, Bots, Permissions"]:::manifest
     end
 
-    subgraph M365["Microsoft 365 Tenant Security Boundary"]
-        subgraph TC["Teams Client"]
-            User1["User<br/>Desktop / Mobile / Web"]
-            Manifest1["Teams App Manifest<br/>Tabs, Bots, Permissions"]
+    subgraph Tenant ["Microsoft 365 Tenant Security Boundary"]
+        
+        subgraph Client ["Teams Client"]
+            IntUser["User<br>Desktop / Mobile / Web"]:::user
+            IntManifest["Teams App Manifest<br>Tabs, Bots, Permissions"]:::manifest
         end
 
-        subgraph Entra["Microsoft Entra ID"]
-            OAuth["OAuth 2.0 / OIDC<br/>Authentication"]
-            ExtAuth["Teams External Collaboration Domain<br/>Settings AuthN"]
-            CA["Conditional Access<br/>MFA / Device Compliance"]
+        subgraph Entra ["Microsoft Entra ID"]
+            OAuth["OAuth 2.0 / OIDC<br>Authentication"]:::auth
+            CondAccess["Conditional Access<br>MFA / Device Compliance"]:::auth
+            ExtAuth["Teams External Collaboration<br>Domain settings authN"]:::collabAuth
         end
 
-        subgraph TP["Teams Platform"]
-            Gateway["Teams Service<br/>Bot / Tab Gateway"]
-            Perms["Permission Checks<br/>RSC / Graph Scopes"]
+        subgraph Platform ["Teams Platform"]
+            BotGateway["Teams Service<br>Bot / Tab Gateway"]:::platSvc
+            PermChecks["Permission Checks<br>RSC / Graph Scopes"]:::platSvc
         end
 
-        subgraph Backend["Application Backend"]
-            WAF["WAF / API Gateway<br/>Rate Limits & Threat Protection"]
-            API["API / Bot Service<br/>TLS + Input Validation"]
+        subgraph Backend ["Application Backend"]
+            APISvc["API / Bot Service<br>TLS + Input Validation"]:::backSvc
+            WAF["WAF / API Gateway<br>Rate Limits & Threat Protection"]:::backSvc
         end
 
-        subgraph Data["Protected Data Services"]
-            DB[("Application Database<br/>Encryption at Rest")]
-            KV[("Key Vault<br/>Secrets / Certificates / Keys")]
+        subgraph ProtectedData ["Protected Data Services"]
+            AppDB[("Application Database<br>Encryption at Rest")]:::db
+            KeyVault[("Key Vault<br>Secrets / Certificates / Keys")]:::db
         end
 
-        subgraph SecOps["Security Operations"]
-            Log["Centralized Logging<br/>Audit Events"]
-            SIEM["SIEM / Defender<br/>Alerting & Response"]
+        subgraph SecOps ["Security Operations"]
+            AuditLog["Centralized Logging<br>Audit Events"]:::secLog
+            SIEM["SIEM / Defender<br>Alerting & Response"]:::secLog
         end
 
-        subgraph ExtSys["External Systems"]
-            Graph["Microsoft Graph API<br/>Least-Privilege Access"]
-            3rdParty["Approved Third-Party APIs<br/>Managed Integration"]
+        subgraph ExtSystems ["External Systems"]
+            GraphAPI["Microsoft Graph API<br>Least-Privilege Access"]:::user
+            ThirdParty["Approved Third-Party APIs<br>Managed Integration"]:::user
         end
     end
 
-    %% Connections
-    User1 -->|Sign-in| OAuth
-    Manifest1 -->|App launch| Gateway
+    %% Apply structural classes
+    class Tenant tenant;
+    class Client client;
+    class Entra entra;
+    class Platform platform;
+    class Backend backend;
+    class ProtectedData data;
+    class SecOps secops;
+    class ExtSystems extSys;
+    class ExtClientWrapper client;
+
+    %% Data flows and relationships
+    ExtClientWrapper -.->|"Allowed<br>Ext Domain"| Entra
+    IntUser -->|"Sign-in"| OAuth
+    IntManifest -->|"App launch"| BotGateway
+    
     OAuth --> ExtAuth
-    ExtAuth -->|Access token| Gateway
-    CA -->|Authorize| Perms
+    ExtAuth -->|"Access token"| BotGateway
+    CondAccess -->|"Authorize"| PermChecks
     
-    Gateway -->|HTTPS| WAF
-    WAF -->|Validated request| API
+    BotGateway -->|"HTTPS"| WAF
+    WAF -->|"Validated request"| APISvc
     
-    API -->|Read / write| DB
-    API -->|Managed identity| KV
+    APISvc -->|"Read / write"| AppDB
+    APISvc ==>|"Managed identity"| KeyVault
     
-    API -->|Scoped calls| Graph
-    API -->|Controlled egress| 3rdParty
+    APISvc -->|"Scoped calls"| GraphAPI
+    APISvc -->|"Controlled egress"| ThirdParty
     
-    Gateway -.->|Audit| Log
-    API -.->|Audit| Log
-    Log -.->|Detect & respond| SIEM
+    BotGateway -.->|"Audit"| AuditLog
+    APISvc -.->|"Audit"| AuditLog
+    AuditLog -.->|"Detect & respond"| SIEM
     
-    ExtClient -.->|Allowed Ext Domain| Entra
-    ExtAuth --> ExtClient
-    SecOps -.-> Perms
+    %% Implicit structural returns/loops identified in the XML
+    Platform -.-> Client
+    SecOps -.-> PermChecks
 
-    %% Styling based on original Draw.io schema
-    style User1 fill:#dae8fc,stroke:#6c8ebf
-    style User2 fill:#dae8fc,stroke:#6c8ebf
-    style Graph fill:#dae8fc,stroke:#6c8ebf
-    style 3rdParty fill:#dae8fc,stroke:#6c8ebf
-    
-    style Manifest1 fill:#fff2cc,stroke:#d6b656
-    style Manifest2 fill:#fff2cc,stroke:#d6b656
-    style OAuth fill:#fff2cc,stroke:#d6b656
-    style ExtAuth fill:#fff2cc,stroke:#d6b656
-    style CA fill:#fff2cc,stroke:#d6b656
-    style DB fill:#fff2cc,stroke:#d6b656
-    style KV fill:#fff2cc,stroke:#d6b656
-    
-    style Gateway fill:#d5e8d4,stroke:#82b366
-    style Perms fill:#d5e8d4,stroke:#82b366
-    
-    style WAF fill:#f8cecc,stroke:#b85450
-    style API fill:#f8cecc,stroke:#b85450
-    
-    style Log fill:#e8e8e8,stroke:#666666
-    style SIEM fill:#e8e8e8,stroke:#666666
 ```
+> Architecture Notes
+
+Topic: External Teams Collaboration Security Architecture Diagram.
 
 
+Citation Links: Microsoft Teams External Communications Settings.
 
+
+Domain Trust Requirements: * Settings must coincide across domains.
+
+In order to chat and meet with people in external domains, the organizations that you trust must also trust your organization.
+
+Access Policies:
+
+
+Allow only specific external domains: By adding domains to an Allow list, you limit external access to only the allowed domains. Once you set up a list of allowed domains, all other domains are blocked.
+
+
+Configure granular domains in external access policies: External access policies give you granular control over external collaboration in Microsoft Teams. This allows you to create custom policies that define which external domains can be allowed or blocked for users and groups, unlike organization settings that apply to everyone.
 
 ```mermaid
 flowchart TD
