@@ -31,6 +31,10 @@ Use this if you need external individuals to actually join your specific Teams, 
 
 ## Security Architecture Diagram:
 
+[View Full Diagram](https://curtis9662.github.io/Mergers/blob/main/Teams%20Collab.drawio.html)
+
+
+
 ```mermaid
 flowchart LR
     %% Title
