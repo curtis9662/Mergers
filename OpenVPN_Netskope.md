@@ -46,3 +46,27 @@ Log into your Netskope tenant and add the following exceptions under `Settings >
 ## The Following is the OKTA "Add Zone" GUi
 | my dev space |
 <img width="1881" height="957" alt="image" src="https://github.com/user-attachments/assets/1034036e-3fda-4802-b7c0-27b00a56cea5" />
+
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as Client Device
+    participant VPN as OpenVPN Access Server (SP)
+    participant Okta as Okta (IdP)
+
+    %% 1. Initiation
+    User->>VPN: Requests connection / Signs into Web UI
+    
+    %% 2. Redirect
+    VPN->>Okta: Redirects Auth Request (SAML 2.0)
+    
+    %% 3. Verification
+    User->>Okta: Enters credentials & completes MFA prompt
+    
+    %% 4. Assertion
+    Okta->>VPN: Issues signed SAML token/assertion
+    
+    %% 5. Session Grant
+    VPN-->>User: Validates token, maps groups, opens encrypted VPN tunnel
+```
