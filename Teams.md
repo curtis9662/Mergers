@@ -32,6 +32,105 @@ Use this if you need external individuals to actually join your specific Teams, 
 ## Security Architecture Diagram:
 
 ```mermaid
+flowchart LR
+    %% Title
+    %% Teams Application Security Architecture
+    
+    subgraph ExtClient["External Teams Client"]
+        User2["User<br/>Desktop / Mobile / Web"]
+        Manifest2["Teams App Manifest<br/>Tabs, Bots, Permissions"]
+    end
+
+    subgraph M365["Microsoft 365 Tenant Security Boundary"]
+        subgraph TC["Teams Client"]
+            User1["User<br/>Desktop / Mobile / Web"]
+            Manifest1["Teams App Manifest<br/>Tabs, Bots, Permissions"]
+        end
+
+        subgraph Entra["Microsoft Entra ID"]
+            OAuth["OAuth 2.0 / OIDC<br/>Authentication"]
+            ExtAuth["Teams External Collaboration Domain<br/>Settings AuthN"]
+            CA["Conditional Access<br/>MFA / Device Compliance"]
+        end
+
+        subgraph TP["Teams Platform"]
+            Gateway["Teams Service<br/>Bot / Tab Gateway"]
+            Perms["Permission Checks<br/>RSC / Graph Scopes"]
+        end
+
+        subgraph Backend["Application Backend"]
+            WAF["WAF / API Gateway<br/>Rate Limits & Threat Protection"]
+            API["API / Bot Service<br/>TLS + Input Validation"]
+        end
+
+        subgraph Data["Protected Data Services"]
+            DB[("Application Database<br/>Encryption at Rest")]
+            KV[("Key Vault<br/>Secrets / Certificates / Keys")]
+        end
+
+        subgraph SecOps["Security Operations"]
+            Log["Centralized Logging<br/>Audit Events"]
+            SIEM["SIEM / Defender<br/>Alerting & Response"]
+        end
+
+        subgraph ExtSys["External Systems"]
+            Graph["Microsoft Graph API<br/>Least-Privilege Access"]
+            3rdParty["Approved Third-Party APIs<br/>Managed Integration"]
+        end
+    end
+
+    %% Connections
+    User1 -->|Sign-in| OAuth
+    Manifest1 -->|App launch| Gateway
+    OAuth --> ExtAuth
+    ExtAuth -->|Access token| Gateway
+    CA -->|Authorize| Perms
+    
+    Gateway -->|HTTPS| WAF
+    WAF -->|Validated request| API
+    
+    API -->|Read / write| DB
+    API -->|Managed identity| KV
+    
+    API -->|Scoped calls| Graph
+    API -->|Controlled egress| 3rdParty
+    
+    Gateway -.->|Audit| Log
+    API -.->|Audit| Log
+    Log -.->|Detect & respond| SIEM
+    
+    ExtClient -.->|Allowed Ext Domain| Entra
+    ExtAuth --> ExtClient
+    SecOps -.-> Perms
+
+    %% Styling based on original Draw.io schema
+    style User1 fill:#dae8fc,stroke:#6c8ebf
+    style User2 fill:#dae8fc,stroke:#6c8ebf
+    style Graph fill:#dae8fc,stroke:#6c8ebf
+    style 3rdParty fill:#dae8fc,stroke:#6c8ebf
+    
+    style Manifest1 fill:#fff2cc,stroke:#d6b656
+    style Manifest2 fill:#fff2cc,stroke:#d6b656
+    style OAuth fill:#fff2cc,stroke:#d6b656
+    style ExtAuth fill:#fff2cc,stroke:#d6b656
+    style CA fill:#fff2cc,stroke:#d6b656
+    style DB fill:#fff2cc,stroke:#d6b656
+    style KV fill:#fff2cc,stroke:#d6b656
+    
+    style Gateway fill:#d5e8d4,stroke:#82b366
+    style Perms fill:#d5e8d4,stroke:#82b366
+    
+    style WAF fill:#f8cecc,stroke:#b85450
+    style API fill:#f8cecc,stroke:#b85450
+    
+    style Log fill:#e8e8e8,stroke:#666666
+    style SIEM fill:#e8e8e8,stroke:#666666
+```
+
+
+
+
+```mermaid
 flowchart TD
     %% Based on configuration steps[cite: 1]
     classDef tenant fill:#f9f9f9,stroke:#333,stroke-width:2px,color:#000;
