@@ -71,3 +71,7 @@ sequenceDiagram
     VPN-->>User: Validates token, maps groups, opens encrypted VPN tunnel
 ```
 <img width="1379" height="637" alt="image" src="https://github.com/user-attachments/assets/b32a5fb9-7822-4f15-a369-3c86e0f79cd6" />
+
+> Cite:
+- https://openvpn.net/cloud-docs/#
+- 
