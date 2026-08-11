@@ -1,0 +1,90 @@
+Summary: SPMS Client EHR Access Strategy
+Purpose
+The SPMS workshop focused on defining a scalable, secure access model that allows pharmacists to connect to multiple client (hospital) EHR systems while supporting the upcoming Pittsburgh migration (near-term timeline) without disrupting operations.
+________________________________________
+Current Challenge
+The SPMS team currently relies on a highly fragmented access model, including:
+•	Multiple client-to-site VPNs (Cisco, Omnissa, etc.)
+•	Client-hosted Citrix environments
+•	Direct web-based access
+This approach creates:
+•	Poor scalability (multiple VPNs per user/device)
+•	Operational complexity (manual setup and switching between clients)
+•	Inability to access multiple systems concurrently
+•	Security risks (uncontrolled external connectivity and identity lifecycle gaps)
+________________________________________
+Recommended Strategy
+1. Standard Target Model (Primary Direction)
+Site-to-site VPN or IP Allow-List Access
+•	Establish centralized connectivity from corporate/AWS infrastructure to hospital systems
+•	Route all access through controlled enterprise channels (no endpoint VPNs)
+Benefits:
+•	Scalable and repeatable architecture
+•	Enables simultaneous multi-client access
+•	Aligns with proven enterprise model
+________________________________________
+2. Preferred Alternative (Where Supported)
+IP Allow Listing (Source IP Anchoring)
+•	Hospitals restrict access to approved corporate/Zscaler egress IPs
+•	Eliminates VPN dependency
+Benefits:
+•	Fastest to implement
+•	Simplest operational model
+________________________________________
+3. Fallback Solution (For Non-Compliant Clients)
+Isolated Access Environments
+•	Cloud PC / jump box / lightly managed device
+•	Segmented from corporate network
+•	Used exclusively for client VPN access
+Benefits:
+•	Maintains security boundaries
+•	Avoids introducing VPN clients onto corporate devices
+•	Provides controlled fallback where required
+________________________________________
+Key Design Principles
+•	No client-to-site VPNs on corporate-managed endpoints
+•	Maintain Zero Trust posture and network segmentation
+•	Avoid sensitive data inspection (EHR traffic)
+•	Standardize onboarding toward site-to-site or allow-list models
+•	Enable concurrent multi-client access
+________________________________________
+Risks & Constraints
+•	Many hospital partners may lack capabilities for:
+o	Site-to-site VPN
+o	Federation / SSO
+•	Current reliance on local hospital user accounts introduces:
+o	Identity lifecycle and offboarding risks
+•	Network constraints:
+o	IP conflicts (requires NAT strategy)
+o	Varying client security requirements
+________________________________________
+Immediate Priorities (Next 2–4 Weeks)
+1. Partner Engagement
+•	Contact each hospital IT team to assess:
+o	Site-to-site VPN capability
+o	IP allow-list support
+o	Willingness to adopt preferred model
+________________________________________
+2. Architecture Definition
+•	Finalize:
+o	Network design (site-to-site, IP anchoring, fallback paths)
+o	NAT and routing strategies
+•	Validate compatibility with Zscaler and backend infrastructure
+________________________________________
+3. Fallback Environment Pilot
+•	Stand up and test:
+o	Cloud PC / jump box solution
+•	Confirm:
+o	Security controls (DLP, isolation, monitoring)
+o	User experience and performance
+________________________________________
+4. Migration Readiness
+•	Build transition plan:
+o	Support parallel access methods temporarily
+o	Prioritize critical hospital connections
+•	Align timeline to Pittsburgh migration wave
+________________________________________
+Bottom Line
+•	Strategic Direction: Standardize on site-to-site VPN or IP allow-list access
+•	Operational Reality: Support a hybrid model short-term
+•	Critical Success Factor: Rapid engagement with hospital IT partners + deployment of a secure fallback environment
