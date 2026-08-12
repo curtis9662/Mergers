@@ -204,3 +204,29 @@ flowchart TD
     ExtUser == "Opt 2: Joins Specific Team" === Team
     InternalUser == "Opt 2: Collaborates in Channels" === Team
 ```
+> ## Images for 1st Hand PoC
+
+ <img width="2502" height="1236" alt="image" src="https://github.com/user-attachments/assets/3cd2fe73-a343-4208-afdb-3fe60501df20" />
+ **Guest Access**
+ <img width="1225" height="1215" alt="image" src="https://github.com/user-attachments/assets/d151073f-d9c0-476b-8e02-c0ff165310bc" />
+ **External Access**
+ - Ensure "Allow Only Specific External Domains" is selected, and request external domains teams settings attestation / 
+<img width="1664" height="1213" alt="image" src="https://github.com/user-attachments/assets/eaacd090-f1fe-49f2-bfbb-1ec1c9d70170" />
+
+<img width="1650" height="1211" alt="image" src="https://github.com/user-attachments/assets/708fbcf9-32b1-4ca6-97c6-35d299252c53" />
+https://admin.teams.microsoft.com/policies/external-communications/add 
+<img width="1198" height="1065" alt="image" src="https://github.com/user-attachments/assets/bc4ca684-e6a2-4453-92fa-64ee26b2262b" />
+Add the specific Domain(s) (multiple can be added to one policy in initial configuration)
+<img width="1257" height="1065" alt="image" src="https://github.com/user-attachments/assets/fd06ff42-b194-451f-afac-4225c0c6dcff" />
+We restrict Unmanaged Msft Accounts, Custom Comm Srvs, and Skype for Business is off
+<img width="1069" height="1223" alt="image" src="https://github.com/user-attachments/assets/213a8499-3f9e-4063-b530-6ea64811c5c8" />
+
+If There is an update issue you will see:
+<img width="995" height="170" alt="image" src="https://github.com/user-attachments/assets/e0376376-342f-4d52-a1dc-1549da28ab16" />
+Which usually means the Subscription is owned by a larger Tenant or the user is not authorized to make changes even w/ Teams Admin Access
+<img width="2287" height="587" alt="image" src="https://github.com/user-attachments/assets/23186b15-a982-4416-976c-0f48940c68b0" />
+
+
+
+
+
