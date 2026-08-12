@@ -225,7 +225,15 @@ If There is an update issue you will see:
 <img width="995" height="170" alt="image" src="https://github.com/user-attachments/assets/e0376376-342f-4d52-a1dc-1549da28ab16" />
 Which usually means the Subscription is owned by a larger Tenant or the user is not authorized to make changes even w/ Teams Admin Access
 <img width="2287" height="587" alt="image" src="https://github.com/user-attachments/assets/23186b15-a982-4416-976c-0f48940c68b0" />
+---
+## B2B Access
+Access https://entra.microsoft.com/#view/Microsoft_AAD_IAM/CrossTenantAccessSettingsList.ReactView → Default
 
+<img width="1296" height="1202" alt="image" src="https://github.com/user-attachments/assets/3ebde08b-a48c-4599-b2f3-19acba2a66f5" />
+
+Make the updates as approved
+
+<img width="1707" height="878" alt="image" src="https://github.com/user-attachments/assets/a47776c3-c700-4b90-a5ad-f2382e9b7ce9" />
 
 
 
