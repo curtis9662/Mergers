@@ -16,7 +16,7 @@ The output will resemble the following Enterprise M&A Security Report dashboard:
 <img width="1459" height="1182" alt="image" src="https://github.com/user-attachments/assets/34583d2a-19c8-4d0d-9700-55b7baac54a9" />
 
 
-*(Please refer to the file "image_64c064.jpg" for the visual reference of the execution output).*
+*(Please refer to the ↑ "image" for the visual reference of the execution output).*
 
 ## Step 2: Zero Trust Assessment
 
