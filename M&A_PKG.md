@@ -18,7 +18,7 @@ The output will resemble the following Enterprise M&A Security Report dashboard:
 
 *(Please refer to the ↑ "image" for the visual reference of the execution output).*
 
-## Step 2: Zero Trust Assessment
+## Step 2: MICROSOFT (Trusted CSP) Zero Trust Assessment
 
 Following the initial GRC validation, execute the comprehensive Zero Trust assessment script to evaluate identity, endpoints, network, and data protection boundaries.
 
