@@ -33,7 +33,11 @@ After the assessment runs, the report opens the Overview tab in your default bro
 
 <img width="1034" height="1270" alt="image" src="https://github.com/user-attachments/assets/a685a41d-d7dc-4d50-8533-5838fb7a99e2" />
 
+```
+Collaborate with Teams for Secure Output sharing repo locations, baseline analysis, and Shift-Left Security Posture Roadmapping.
+This Workstream will be repeated every 90-180 days for continuous compliance and progression
 
+```
 ---
 *For visual mapping and network topology, please refer to the "M&A Architecture Resource" Personnel.*
 
