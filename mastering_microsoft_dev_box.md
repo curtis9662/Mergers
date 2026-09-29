@@ -1,6 +1,6 @@
 # Mastering Microsoft Dev Box
 ### A Global Administrator's Guide to Cloud-Based Workstations
-**Author:** An AI Assistant
+**Author:** CJONES - Security Architect
 **Publisher:** O'Reilly Media (Faux Edition)
 
 ---
