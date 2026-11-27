@@ -1,0 +1,35 @@
+Install-PSResource -Name ZeroTrustAssessment -Scope CurrentUser
+
+Untrusted repository
+You are installing the modules from an untrusted repository. If you trust this repository, change its Trusted value by running the Set-PSResourceRepository
+cmdlet. Are you sure you want to install the PSResource from 'PSGallery'?
+[Y] Yes  [A] Yes to All  [N] No  [L] No to All  [S] Suspend  [?] Help (default is "N"): A
+PS C:\> Connect-ZtAssessment -Tenant carepathrxllc.com
+
+Resolving 7 dependencies...
+    ✅ Module PSFramework found (v1.14.457).
+    ⬇️ Module Microsoft.Graph.Authentication v2.40.0 saved successfully.
+    ⬇️ Module Microsoft.Graph.Beta.Teams v2.40.0 saved successfully.
+    ⬇️ Module Az.Accounts v5.5.3 saved successfully.
+    ✅ Module ExchangeOnlineManagement found (v3.10.1).
+    ⬇️ Module Microsoft.Online.SharePoint.PowerShell v16.0.27612.12000 saved successfully.
+    ⬇️ Module AipService v3.1.0.0 saved successfully.
+
+
+Asserting MSAL loading order for dependencies...
+    ✅ Loading Microsoft.IdentityModel.Abstractions.dll
+    ✅ Loading MSAL v4.90.0.0 for dependency ExchangeOnlineManagement version 3.11.1
+    ✅ Loaded Microsoft.Identity.Client.Broker.dll
+    ✅ Loaded Microsoft.Identity.Client.NativeInterop.dll
+    ✅ Loaded Microsoft.IdentityModel.Abstractions.dll
+    ✅ Loaded Microsoft.Identity.Client.Extensions.Msal.dll
+🔑 Authentication to Graph, Azure, AipService, ExchangeOnline, SecurityCompliance, SharePointOnline.
+During the next steps, you may be prompted to authenticate separately for several services.
+
+Connecting to Microsoft Graph
+WARNING: Note: Sign in by Web Account Manager (WAM) is enabled by default on Windows. If using an embedded terminal, the interactive browser window may be hidden behind other windows.
+WARNING: [09:09:01][Connect-ZtAssessment] Failed to authenticate to Graph:  | InteractiveBrowserCredential authentication failed: User canceled authentication.
+   ❌ Failed to connect.
+       Tests requiring Microsoft Graph cannot be executed.
+       Graph is critical to the ZeroTrustAssessment report. Aborting.
+Connect-ZtAssessment: InteractiveBrowserCredential authentication failed: User canceled authentication.
